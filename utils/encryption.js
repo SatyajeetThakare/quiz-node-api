@@ -8,7 +8,7 @@ if (
   || !process.env.REFRESH_TOKEN_EXPIRY
   || !process.env.REFRESH_TOKEN_ALGO
 ) {
-  logger.error('Please set JWT ENV variables');
+  logger.error('Please set JWT ENV variables immidiately');
   process.exit(-1);
 }
 
