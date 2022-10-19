@@ -60,7 +60,7 @@ const allRoutes = require('./routes');
 app.use(config.app.prefix, allRoutes);
 
 const hostname = '127.0.0.1';
-const port = 2000;
+const port = 3000;
 //  START THE SERVER
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
