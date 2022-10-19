@@ -12,7 +12,7 @@ var cors = require('cors');
 
 const session = require('express-session');
 
-let whitelist = ['http://localhost:4200', 'https://quizangularapp.web.app'];
+let whitelist = ['http://localhost:4201', 'https://quizangularapp.web.app'];
 let corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1 || !origin) {
