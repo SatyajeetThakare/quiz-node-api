@@ -1,0 +1,31 @@
+{
+    "server": {
+        "port": 2000
+    },
+    "app": {
+        "prefix": "/quiz/api",
+        "secret": "longlivenodejsafterallitsjavascript3cheershiphiphurray"
+    },
+    "db": {
+        "mongodb_url": "mongodb+srv://admin:yl7gVk9HOc30Js4Y@cluster0.pbuepsh.mongodb.net",
+        "db_name": "/quiz",
+        "db_options": "",
+        "mongodb_session_store_url": "mongodb+srv://admin:yl7gVk9HOc30Js4Y@cluster0.pbuepsh.mongodb.net",
+        "session_db_name": "/quiz",
+        "session_db_options": "?"
+    },
+    "auth": {
+        "token_validity": 3600,
+        "cookie_validity": 3600
+    },
+    "cookie": {
+        "path": "/quiz",
+        "name": "quiz_sid",
+        "validity": 3600
+    },
+    "token": {
+        "validity": 86400,
+        "refreshValidity": 604800,
+        "secret": "longlivenodejsafterallitsjavascript3cheershiphiphurray"
+    }
+}
