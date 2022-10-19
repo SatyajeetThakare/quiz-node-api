@@ -2,7 +2,7 @@ const allRoutes = require('express').Router();
 const constants = require('../../constants/constants');
 
 allRoutes.get('/', (req, res) => {
-    console.log('res', res);
+    console.log('Welcome!');
     res.json({
       message: constants.WELCOME_MSG
     })
