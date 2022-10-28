@@ -11,5 +11,8 @@ module.exports = {
     Task: require('../modules/task/task.model'),
     Article: require('../modules/article/article.model'),
     Podcast: require('../modules/podcast/podcast.model'),
-    QuestionAndAnswer: require('../modules/question-and-answer/question-and-answer.model')
+    QuestionAndAnswer: require('../modules/question-and-answer/question-and-answer.model'),
+    State: require('../modules/state/state.model'),
+    District: require('../modules/district/district.model'),
+    // School: require('../modules/school/school.model')
 };

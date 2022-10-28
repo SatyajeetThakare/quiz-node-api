@@ -17,7 +17,8 @@ const {
     register,
     update,
     getUserNotifications,
-    getById
+    getById,
+    authMe
 } = require('./user.controller');
 const { isAuthenticated } = require('../../middlewares/isAuthenticated');
 
@@ -33,6 +34,7 @@ sessions.Session.prototype.authenticate = (req, user, cb) => {
 
 userRoutes.post('/users/authenticate', authenticate);
 userRoutes.get('/users/getUserNotifications', isAuthenticated, getUserNotifications);
+userRoutes.get('/users/authMe', isAuthenticated, authMe);
 userRoutes.get('/users/getById/:id', isAuthenticated, getById);
 userRoutes.post('/users/register', register);
 userRoutes.put('/users/update/:id', isAuthenticated, update);

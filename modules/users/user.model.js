@@ -57,6 +57,18 @@ const UserSchema = new mongoose.Schema({
   categories: [{
     type: mongoose.Schema.Types.Mixed,
   }],
+  state: {
+    type: Number,
+    ref: 'State'
+  },
+  district: {
+    type: Number,
+    ref: 'District'
+  },
+  school: {
+    type: Number,
+    ref: 'School'
+  },
   remarks: {
     type: String,
   },

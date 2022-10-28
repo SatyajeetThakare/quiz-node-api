@@ -15,6 +15,8 @@ const taskRoutes = require('../../modules/task/task.routes');
 const articleRoutes = require('../../modules/article/article.routes');
 const podcastRoutes = require('../../modules/podcast/podcast.routes');
 const questionAndAnswerRoutes = require('../../modules/question-and-answer/question-and-answer.routes');
+const stateRoutes = require('../../modules/state/state.routes');
+const districtRoutes = require('../../modules/district/district.routes');
 
 allRoutes.use(userRoutes);
 allRoutes.use(roleRoutes);
@@ -23,5 +25,7 @@ allRoutes.use(taskRoutes);
 allRoutes.use(articleRoutes);
 allRoutes.use(podcastRoutes);
 allRoutes.use(questionAndAnswerRoutes);
+allRoutes.use(stateRoutes);
+allRoutes.use(districtRoutes);
 
 module.exports = allRoutes;
