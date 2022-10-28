@@ -51,6 +51,12 @@ const UserSchema = new mongoose.Schema({
   image: {
     type: String,
   },
+  age: {
+    type: Number
+  },
+  categories: [{
+    type: mongoose.Schema.Types.Mixed,
+  }],
   remarks: {
     type: String,
   },

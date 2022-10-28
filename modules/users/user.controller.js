@@ -46,13 +46,14 @@ async function getCurrent(req, res, next) {
 
 async function getById(req, res, next) {
     UserService.getById(req.params.id)
-        .then(user => user ? res.json(user) : res.sendStatus(404))
+        .then(user => res.json({ error: false, success: true, message: "User fetched successfully", data: user }))
         .catch(err => next(err));
 }
 
 async function update(req, res, next) {
+    req.body.updatedBy = await getUserId(req);
     UserService.update(req.params.id, req.body)
-        .then(() => res.json({}))
+        .then((user) => res.json({ error: false, success: true, message: "User updated successfully", data: user }))
         .catch(err => next(err));
 }
 
