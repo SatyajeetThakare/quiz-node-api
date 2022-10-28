@@ -3,6 +3,7 @@ const router = express.Router();
 const UserService = require('./user.service');
 
 const { getUserId } = require('../../middlewares/isAuthenticated');
+const { sendResponse } = require('../../utils');
 
 module.exports = router;
 
