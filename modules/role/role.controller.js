@@ -5,6 +5,7 @@ const RoleService = require('./role.service');
 module.exports = router;
 
 async function create(req, res, next) {
+    req.body.createdBy = await getUserId(req);
     RoleService.create(req.body).then((doc) => {
         res.json({ error: false, success: true, message: "Role created successfully", data: doc })
     }).catch(error => {

@@ -11,21 +11,23 @@ async function authenticate(req, res, next) {
         .then((user) => {
             user ? res.json({ error: false, success: true, message: "User authenticated successfully", data: user }) :
                 res.status(400).json({ message: 'Username or password is incorrect' })
-        }).catch(error => res.json({ error: false, success: true, message: (error || error.error) || error.message, data: {} }));
+        }).catch(error => {
+            sendResponse(res, 500, null, (error.message || error || error.error), false, true);
+        });
 }
 
 async function register(req, res, next) {
     UserService.create(req.body).then((doc) => {
         res.json({ error: false, success: true, message: "User created successfully", data: doc });
     }).catch(error => {
-        res.json({ error: false, success: true, message: (error || error.error) || error.message, data: {} });
+        sendResponse(res, 500, null, (error.message || error || error.error), false, true);
     });
 }
 
 async function getAll(req, res, next) {
     UserService.getAll()
         .then(doc => res.json({ error: false, success: true, message: "User fetched successfully", data: doc }))
-        .catch(error => res.json({ error: false, success: true, message: (error || error.error) || error.message, data: {} }));
+        .catch(error => sendResponse(res, 500, null, (error.message || error || error.error), false, true));
 }
 
 async function getUserNotifications(req, res, next) {
@@ -33,7 +35,7 @@ async function getUserNotifications(req, res, next) {
     UserService.getUserNotifications(userId)
         .then((user) => {
             res.json({ error: false, success: true, message: "User notifications fetched successfully", data: user })
-        }).catch(error => res.json({ error: false, success: true, message: (error || error.error) || error.message, data: {} }));
+        }).catch(error => sendResponse(res, 500, null, (error.message || error || error.error), false, true));
 }
 
 async function getCurrent(req, res, next) {

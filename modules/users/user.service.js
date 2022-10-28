@@ -99,6 +99,7 @@ function create(userParam) {
 
             User.create(user, function (error, doc) {
                 if (error) {
+                    console.log('error', error);
                     reject(error);
                 } else {
                     resolve(doc);
