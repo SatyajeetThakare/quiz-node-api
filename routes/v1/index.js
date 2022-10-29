@@ -18,6 +18,7 @@ const questionAndAnswerRoutes = require('../../modules/question-and-answer/quest
 const stateRoutes = require('../../modules/state/state.routes');
 const districtRoutes = require('../../modules/district/district.routes');
 const schoolRoutes = require('../../modules/school/school.routes');
+const topicRoutes = require('../../modules/topic/topic.routes');
 
 allRoutes.use(userRoutes);
 allRoutes.use(roleRoutes);
@@ -29,5 +30,6 @@ allRoutes.use(questionAndAnswerRoutes);
 allRoutes.use(stateRoutes);
 allRoutes.use(districtRoutes);
 allRoutes.use(schoolRoutes);
+allRoutes.use(topicRoutes);
 
 module.exports = allRoutes;

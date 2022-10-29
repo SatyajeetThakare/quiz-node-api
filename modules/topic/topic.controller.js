@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const ArticleService = require('./article.service');
+const TopicService = require('./topic.service');
 
 const { sendResponse } = require('../../utils');
 const { getUserId } = require('../../middlewares/isAuthenticated');
@@ -10,8 +10,8 @@ module.exports = router;
 async function create(req, res, next) {
     try {
         req.body.createdBy = await getUserId(req);
-        ArticleService.create(req.body).then((doc) => {
-            res.json({ error: false, success: true, message: "Article created successfully", data: doc });
+        TopicService.create(req.body).then((doc) => {
+            res.json({ error: false, success: true, message: "Topic created successfully", data: doc });
         }).catch(error => {
             sendResponse(res, 500, null, (error.message || error || error.error), false, true);
         });
@@ -20,13 +20,13 @@ async function create(req, res, next) {
     }
 }
 
-async function getArticles(req, res, next) {
+async function getTopics(req, res, next) {
     try {
         const userId = await getUserId(req);
         let _filter = req.query.filter || {};
         _filter.isActive = true;
-        ArticleService.getArticles(userId, req.body).then((doc) => {
-            res.json({ error: false, success: true, message: "Articles fetched successfully", data: doc })
+        TopicService.getTopics(userId, req.body).then((doc) => {
+            res.json({ error: false, success: true, message: "Topics fetched successfully", data: doc })
         }).catch(error => {
             sendResponse(res, 500, null, (error.message || error || error.error), false, true);
         });
@@ -38,8 +38,8 @@ async function getArticles(req, res, next) {
 async function getById(req, res, next) {
     try {
         const userId = await getUserId(req);
-        ArticleService.getById(req.params.id, userId).then((doc) => {
-            res.json({ error: false, success: true, message: "Article fetched successfully", data: doc })
+        TopicService.getById(req.params.id, userId).then((doc) => {
+            res.json({ error: false, success: true, message: "Topic fetched successfully", data: doc })
         }).catch(error => {
             sendResponse(res, 500, null, (error.message || error || error.error), false, true);
         });   
@@ -50,21 +50,21 @@ async function getById(req, res, next) {
 
 async function update(req, res, next) {
     req.body.updatedBy = await getUserId(req);
-    ArticleService.update(req.body)
-        .then(() => res.json({ error: false, success: true, message: "Article updated successfully", data: {} }))
+    TopicService.update(req.body)
+        .then(() => res.json({ error: false, success: true, message: "Topic updated successfully", data: {} }))
         .catch(error => sendResponse(res, 500, null, (error.message || error || error.error), false, true));
 }
 
 async function _delete(req, res, next) {
-    ArticleService.delete(req.params.id)
-        .then(() => res.json({ error: false, success: true, message: "Article deleted successfully", data: {} }))
+    TopicService.delete(req.params.id)
+        .then(() => res.json({ error: false, success: true, message: "Topic deleted successfully", data: {} }))
         .catch(error => sendResponse(res, 500, null, (error.message || error || error.error), false, true));
 }
 
 
 module.exports = {
     create,
-    getArticles,
+    getTopics,
     getById,
     update,
     _delete

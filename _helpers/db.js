@@ -14,5 +14,6 @@ module.exports = {
     QuestionAndAnswer: require('../modules/question-and-answer/question-and-answer.model'),
     State: require('../modules/state/state.model'),
     District: require('../modules/district/district.model'),
-    School: require('../modules/school/school.model')
+    School: require('../modules/school/school.model'),
+    Topic: require('../modules/topic/topic.model')
 };
