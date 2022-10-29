@@ -19,6 +19,7 @@ const stateRoutes = require('../../modules/state/state.routes');
 const districtRoutes = require('../../modules/district/district.routes');
 const schoolRoutes = require('../../modules/school/school.routes');
 const topicRoutes = require('../../modules/topic/topic.routes');
+const communicationRoutes = require('../../modules/communication/communication.routes');
 
 allRoutes.use(userRoutes);
 allRoutes.use(roleRoutes);
@@ -31,5 +32,6 @@ allRoutes.use(stateRoutes);
 allRoutes.use(districtRoutes);
 allRoutes.use(schoolRoutes);
 allRoutes.use(topicRoutes);
+allRoutes.use(communicationRoutes);
 
 module.exports = allRoutes;

@@ -8,7 +8,7 @@ const { sendResponse } = require('../../utils');
 
 const { getUserId } = require('../../middlewares/isAuthenticated');
 const { checkIfQuestionsAreUnanswered } = require('../question-and-answer/question-and-answer.service');
-const { unseenArticles } = require('../article/article.service');
+const { unseenCommunications } = require('../communication/communication.service');
 const { unseenPodcasts } = require('../podcast/podcast.service');
 
 module.exports = {
@@ -70,13 +70,13 @@ async function getAll() {
 async function getUserNotifications(userId) {
     try {
         let notification;
-        const unansweredQuestions = await checkIfQuestionsAreUnanswered(userId);
-        const unseenArticlesList = await unseenArticles(userId);
-        const unseenPodcastsList = await unseenPodcasts(userId);
+        // const unansweredQuestions = await checkIfQuestionsAreUnanswered(userId);
+        const unseenCommunicationsList = await unseenCommunications(userId);
+        // const unseenPodcastsList = await unseenPodcasts(userId);
         notification = {
-            unansweredQuestions: unansweredQuestions.length,
-            unseenArticles: unseenArticlesList.length,
-            unseenPodcasts: unseenPodcastsList.length
+            // unansweredQuestions: unansweredQuestions.length,
+            unseenCommunications: unseenCommunicationsList.length,
+            // unseenPodcasts: unseenPodcastsList.length
         }
         return notification;
     } catch (error) {
