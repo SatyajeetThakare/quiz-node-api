@@ -18,7 +18,8 @@ module.exports = {
     getUserNotifications,
     create,
     update,
-    delete: _delete
+    delete: _delete,
+    getMentorsByTopicId
 };
 
 function authenticate(req) {
@@ -133,4 +134,25 @@ async function update(id, userParam) {
 
 async function _delete(id) {
     await User.findByIdAndRemove(id);
+}
+
+function getMentorsByTopicId(topicId) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let topics = [];
+            topics.push(Number(topicId));
+            
+            User.find({ isActive: true, topics: { $in: topics } })
+                .populate('createdBy', 'name')
+                .exec(function (error, doc) {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(doc);
+                    }
+                });
+        } catch (error) {
+            reject(error);
+        }
+    });
 }

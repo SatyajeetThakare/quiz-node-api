@@ -61,8 +61,14 @@ async function update(req, res, next) {
 
 async function _delete(req, res, next) {
     UserService.delete(req.params.id)
-        .then(() => res.json({}))
-        .catch(err => sendResponse(res, 500, null, (error.message || error || error.error), false, true));
+        .then((user) => res.json({ error: false, success: true, message: "User deleted successfully", data: user }))
+        .catch(error => sendResponse(res, 500, null, (error.message || error || error.error), false, true));
+}
+
+async function getMentorsByTopicId(req, res, next) {
+    UserService.getMentorsByTopicId(req.params.id)
+        .then((user) => res.json({ error: false, success: true, message: "Mentors fetched successfully", data: user }))
+        .catch(error => sendResponse(res, 500, null, (error.message || error || error.error), false, true));
 }
 
 module.exports = {
@@ -73,5 +79,6 @@ module.exports = {
     authMe,
     getById,
     update,
-    _delete
+    _delete,
+    getMentorsByTopicId
 };

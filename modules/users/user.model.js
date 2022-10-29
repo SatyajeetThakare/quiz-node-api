@@ -54,7 +54,7 @@ const UserSchema = new mongoose.Schema({
   age: {
     type: Number
   },
-  categories: [{
+  topics: [{
     type: mongoose.Schema.Types.Mixed,
   }],
   state: {
