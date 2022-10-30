@@ -43,20 +43,20 @@ async function authMe(req, res, next) {
     let userId = await getUserId(req);
     UserService.getById(userId)
         .then(user => res.json({ error: false, success: true, message: "User fetched successfully", data: user }))
-        .catch(err => sendResponse(res, 500, null, (error.message || error || error.error), false, true));
+        .catch(error => sendResponse(res, 500, null, (error.message || error || error.error), false, true));
 }
 
 async function getById(req, res, next) {
     UserService.getById(req.params.id)
         .then(user => res.json({ error: false, success: true, message: "User fetched successfully", data: user }))
-        .catch(err => sendResponse(res, 500, null, (error.message || error || error.error), false, true));
+        .catch(error => sendResponse(res, 500, null, (error.message || error || error.error), false, true));
 }
 
 async function update(req, res, next) {
     req.body.updatedBy = await getUserId(req);
     UserService.update(req.params.id, req.body)
         .then((user) => res.json({ error: false, success: true, message: "User updated successfully", data: user }))
-        .catch(err => sendResponse(res, 500, null, (error.message || error || error.error), false, true));
+        .catch(error => sendResponse(res, 500, null, (error.message || error || error.error), false, true));
 }
 
 async function _delete(req, res, next) {
@@ -71,6 +71,12 @@ async function getMentorsByTopicId(req, res, next) {
         .catch(error => sendResponse(res, 500, null, (error.message || error || error.error), false, true));
 }
 
+async function getUnverifiedUsers(req, res, next) {
+    UserService.getUnverifiedUsers()
+        .then(doc => res.json({ error: false, success: true, message: "Unverified users fetched successfully", data: doc }))
+        .catch(error => sendResponse(res, 500, null, (error.message || error || error.error), false, true));
+}
+
 module.exports = {
     authenticate,
     register,
@@ -80,5 +86,6 @@ module.exports = {
     getById,
     update,
     _delete,
-    getMentorsByTopicId
+    getMentorsByTopicId,
+    getUnverifiedUsers
 };

@@ -69,6 +69,17 @@ const UserSchema = new mongoose.Schema({
     type: Number,
     ref: 'School'
   },
+  docUrl: {
+    type: String
+  },
+  isVerified: {
+    type: Boolean,
+    default: false
+  },
+  isProfileCompleted: {
+    type: Boolean,
+    default: false
+  },
   remarks: {
     type: String,
   },
@@ -78,7 +89,7 @@ const UserSchema = new mongoose.Schema({
   isActive: {
     type: Boolean,
     default: true,
-    index: true,
+    index: true
   },
   createdBy: {
     type: mongoose.Schema.Types.Mixed,
@@ -96,7 +107,7 @@ UserSchema.plugin(uniqueValidator, {
   message: 'is already taken.',
 });
 
-if(!mongoose.models.User){
+if (!mongoose.models.User) {
   // accountSchema.plugin(AutoIncrement,{id:'userId_counter',inc_field:'userId' });
   UserSchema.plugin(AutoIncrement, { model: 'user', id: 'userId_counter' });
 }

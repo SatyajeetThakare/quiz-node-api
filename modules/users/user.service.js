@@ -19,7 +19,8 @@ module.exports = {
     create,
     update,
     delete: _delete,
-    getMentorsByTopicId
+    getMentorsByTopicId,
+    getUnverifiedUsers
 };
 
 function authenticate(req) {
@@ -31,6 +32,10 @@ function authenticate(req) {
 
             if (user) {
                 if (user && bcrypt.compareSync(password, user.hash)) {
+
+                    if (!user.isVerified) {
+                        reject('User is not verified yet');
+                    }
 
                     const token = jwt.sign({ id: user._id, email: user.email }, process.env.TOKEN_SECRET, { expiresIn: config.token.validity });
 
@@ -67,6 +72,20 @@ async function getAll() {
     return await User.find();
 }
 
+async function getUnverifiedUsers() {
+    return new Promise((resolve, reject) => {
+        User.find({ 'isActive': true, $or: [{ isVerified: false }, { isVerified: { $exists: false } }] })
+            .populate('role', 'name')
+            .exec(function (error, doc) {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(doc);
+                }
+            });
+    });
+}
+
 async function getUserNotifications(userId) {
     try {
         let notification;
@@ -100,7 +119,6 @@ function create(userParam) {
 
             User.create(user, function (error, doc) {
                 if (error) {
-                    console.log('error', error);
                     reject(error);
                 } else {
                     resolve(doc);
@@ -141,7 +159,7 @@ function getMentorsByTopicId(topicId) {
         try {
             let topics = [];
             topics.push(Number(topicId));
-            
+
             User.find({ isActive: true, topics: { $in: topics } })
                 .populate('createdBy', 'name')
                 .exec(function (error, doc) {

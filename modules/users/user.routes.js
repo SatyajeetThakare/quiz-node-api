@@ -19,7 +19,8 @@ const {
     getUserNotifications,
     getById,
     authMe,
-    getMentorsByTopicId
+    getMentorsByTopicId,
+    getUnverifiedUsers
 } = require('./user.controller');
 const { isAuthenticated } = require('../../middlewares/isAuthenticated');
 
@@ -40,6 +41,7 @@ userRoutes.get('/users/getById/:id', isAuthenticated, getById);
 userRoutes.post('/users/register', register);
 userRoutes.put('/users/update/:id', isAuthenticated, update);
 userRoutes.get('/users/getMentorsByTopicId/:id', isAuthenticated, getMentorsByTopicId);
+userRoutes.get('/users/getUnverifiedUsers', isAuthenticated, getUnverifiedUsers);
 // userRoutes.patch('/users/password', isAuthenticated, changeUserPasswordController);
 
 module.exports = userRoutes;
