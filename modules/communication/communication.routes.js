@@ -10,7 +10,7 @@ const {
 } = require('./communication.controller');
 const { isAuthenticated } = require('../../middlewares/isAuthenticated');
 
-routes.get('/communications/getCommunications/:mentorId/:senderId', isAuthenticated, getCommunications);
+routes.get('/communications/getCommunications/:topicId/:mentorId/:senderId', isAuthenticated, getCommunications);
 routes.get('/communications/getById/:id', isAuthenticated, getById);
 routes.get('/communications/getUnseenCommunications/:mentorId', isAuthenticated, getUnseenCommunications);
 routes.post('/communications/create', isAuthenticated, create);

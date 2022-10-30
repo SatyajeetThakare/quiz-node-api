@@ -23,11 +23,12 @@ async function create(req, res, next) {
 async function getCommunications(req, res, next) {
     try {
         const userId = await getUserId(req);
+        const topicId = Number(req.params.topicId);
         const mentorId = Number(req.params.mentorId);
         const senderId = Number(req.params.senderId) || await getUserId(req);
         let _filter = req.query.filter || {};
         _filter.isActive = true;
-        CommunicationService.getCommunications(senderId, mentorId, _filter).then((doc) => {
+        CommunicationService.getCommunications(topicId, senderId, mentorId, _filter).then((doc) => {
             res.json({ error: false, success: true, message: "Communications fetched successfully", data: doc })
         }).catch(error => {
             sendResponse(res, 500, null, (error.message || error || error.error), false, true);

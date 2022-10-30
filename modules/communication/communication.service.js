@@ -29,12 +29,12 @@ function create(communication) {
     });
 }
 
-function getCommunications(senderId, mentorId, _filter) {
+function getCommunications(topicId, senderId, mentorId, _filter) {
     return new Promise(async (resolve, reject) => {
         try {
             Communication.find({
-                $or: [{ 'isActive': true, 'createdBy': senderId, 'to': mentorId },
-                { 'isActive': true, 'createdBy': mentorId, 'to': senderId }]
+                $or: [{ 'isActive': true, topic: topicId, 'createdBy': senderId, 'to': mentorId },
+                { 'isActive': true, topic: topicId, 'createdBy': mentorId, 'to': senderId }]
             })
                 .populate('createdBy', 'name')
                 .exec(function (error, doc) {

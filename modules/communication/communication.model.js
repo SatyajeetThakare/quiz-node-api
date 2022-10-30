@@ -8,8 +8,11 @@ const CommunicationSchema = new mongoose.Schema({
     type: String,
     required: [true, 'can\'t be blank']
   },
+  topic: {
+    type: Number
+  },
   to: {
-    type: Number,
+    type: Number
   },
   isViewed: {
     type: Boolean,
