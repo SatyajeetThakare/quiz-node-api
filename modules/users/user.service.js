@@ -33,7 +33,9 @@ function authenticate(req) {
             if (user) {
                 if (user && bcrypt.compareSync(password, user.hash)) {
 
-                    if (!user.isVerified) {
+                    const rolesToBeVerified = [2];
+                    const needVerification = rolesToBeVerified.includes(user.role); 
+                    if (needVerification && !user.isVerified) {
                         reject('User is not verified yet');
                     }
 
@@ -74,7 +76,7 @@ async function getAll() {
 
 async function getUnverifiedUsers() {
     return new Promise((resolve, reject) => {
-        User.find({ 'isActive': true, $or: [{ isVerified: false }, { isVerified: { $exists: false } }] })
+        User.find({ 'isActive': true, role: 2, $or: [{ isVerified: false }, { isVerified: { $exists: false } }] })
             .populate('role', 'name')
             .exec(function (error, doc) {
                 if (error) {
@@ -110,8 +112,9 @@ async function getById(id) {
 function create(userParam) {
     return new Promise((resolve, reject) => {
         try {
+            const rolesDoNotNeedVerification = [1, 3];
             const user = new User(userParam);
-
+            user.isVerified = rolesDoNotNeedVerification.includes(user.role); 
             // hash password
             if (userParam.password) {
                 user.hash = bcrypt.hashSync(userParam.password, 10);
