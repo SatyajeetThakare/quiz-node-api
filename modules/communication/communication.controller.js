@@ -23,10 +23,26 @@ async function create(req, res, next) {
 async function getCommunications(req, res, next) {
     try {
         const userId = await getUserId(req);
-        const mentorId = req.params.mentorId;
+        const mentorId = Number(req.params.mentorId);
+        const senderId = Number(req.params.senderId) || await getUserId(req);
         let _filter = req.query.filter || {};
         _filter.isActive = true;
-        CommunicationService.getCommunications(userId, mentorId, _filter).then((doc) => {
+        CommunicationService.getCommunications(senderId, mentorId, _filter).then((doc) => {
+            res.json({ error: false, success: true, message: "Communications fetched successfully", data: doc })
+        }).catch(error => {
+            sendResponse(res, 500, null, (error.message || error || error.error), false, true);
+        });
+    } catch (error) {
+        sendResponse(res, 500, null, (error.message || error || error.error), false, true);
+    }
+}
+
+async function getUnseenCommunications(req, res, next) {
+    try {
+        const userId = await getUserId(req);
+        let _filter = req.query.filter || {};
+        _filter.isActive = true;
+        CommunicationService.getUnseenCommunications(userId).then((doc) => {
             res.json({ error: false, success: true, message: "Communications fetched successfully", data: doc })
         }).catch(error => {
             sendResponse(res, 500, null, (error.message || error || error.error), false, true);
@@ -49,6 +65,14 @@ async function getById(req, res, next) {
     }
 }
 
+async function markCommunicationsAsSeen(req, res, next) {
+    const to = await getUserId(req);
+    const createdBy = req.body.createdBy;
+    CommunicationService.markCommunicationsAsSeen(createdBy, to)
+        .then(() => res.json({ error: false, success: true, message: "Communication updated successfully", data: {} }))
+        .catch(error => sendResponse(res, 500, null, (error.message || error || error.error), false, true));
+}
+
 async function update(req, res, next) {
     req.body.updatedBy = await getUserId(req);
     CommunicationService.update(req.body)
@@ -68,5 +92,7 @@ module.exports = {
     getCommunications,
     getById,
     update,
-    _delete
+    _delete,
+    getUnseenCommunications,
+    markCommunicationsAsSeen
 };

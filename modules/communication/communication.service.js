@@ -1,5 +1,6 @@
 const db = require('../../_helpers/db');
 const Communication = db.Communication;
+const { groupByKey } = require('../../utils/arrayMethods');
 
 module.exports = {
     getCommunications,
@@ -7,8 +8,9 @@ module.exports = {
     create,
     update,
     delete: _delete,
-    markCommunicationsAsViewed,
-    unseenCommunications
+    markCommunicationsAsSeen,
+    unseenCommunications,
+    getUnseenCommunications
 };
 
 function create(communication) {
@@ -27,10 +29,13 @@ function create(communication) {
     });
 }
 
-function getCommunications(userId, mentorId, _filter) {
+function getCommunications(senderId, mentorId, _filter) {
     return new Promise(async (resolve, reject) => {
         try {
-            Communication.find({ 'isActive': true, createdBy: userId, to: mentorId })
+            Communication.find({
+                $or: [{ 'isActive': true, 'createdBy': senderId, 'to': mentorId },
+                { 'isActive': true, 'createdBy': mentorId, 'to': senderId }]
+            })
                 .populate('createdBy', 'name')
                 .exec(function (error, doc) {
                     if (error) {
@@ -104,25 +109,45 @@ function _delete(id) {
 function unseenCommunications(userId) {
     return new Promise((resolve, reject) => {
         try {
-            Communication.find({ isActive: true, to: userId, isViewed: false, isViewed: { $exists: false } })
-                .exec(function (error, doc) {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        resolve(doc);
-                    }
-                });
+            Communication.find(
+                {
+                    $and: [
+                        {
+                            $or: [{ isViewed: false }, { isViewed: { $exists: false } }]
+                        },
+                        { isActive: true, to: userId }
+                    ]
+                }
+            ).populate('createdBy', 'name').exec(function (error, doc) {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(doc);
+                }
+            });
         } catch (error) {
             reject(error);
         }
     });
 }
 
-function markCommunicationsAsViewed(userId, to) {
+function getUnseenCommunications(userId) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const unseenCommunicationsList = await unseenCommunications(Number(userId));
+            const unseenCommunicationsListByUsers = await groupByKey(unseenCommunicationsList);
+            resolve(unseenCommunicationsListByUsers);
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+function markCommunicationsAsSeen(createdBy, to) {
     return new Promise((resolve, reject) => {
         try {
             Communication.update(
-                { createdBy: userId, to: to },
+                { createdBy: Number(createdBy), to: Number(to) },
                 { isViewed: true }
             ).exec(function (error, doc) {
                 if (error) {
