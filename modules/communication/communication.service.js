@@ -110,14 +110,15 @@ function unseenCommunications(userId) {
     return new Promise((resolve, reject) => {
         try {
             Communication.find(
-                {
-                    $and: [
-                        {
-                            $or: [{ isViewed: false }, { isViewed: { $exists: false } }]
-                        },
-                        { isActive: true, to: userId }
-                    ]
-                }
+                { 'isActive': true, 'to': Number(userId), $or: [{ isViewed: false }, { isViewed: { $exists: false } }] }
+                // {
+                //     $and: [
+                //         {
+                //             $or: [{ isViewed: false }, { isViewed: { $exists: false } }]
+                //         },
+                //         { 'isActive': true, 'to': Number(userId) }
+                //     ]
+                // }
             ).populate('createdBy', 'name').exec(function (error, doc) {
                 if (error) {
                     reject(error);
@@ -144,9 +145,10 @@ function getUnseenCommunications(userId) {
 }
 
 function markCommunicationsAsSeen(createdBy, to) {
+    console.log(createdBy, to);
     return new Promise((resolve, reject) => {
         try {
-            Communication.update(
+            Communication.updateMany(
                 { createdBy: Number(createdBy), to: Number(to) },
                 { isViewed: true }
             ).exec(function (error, doc) {
