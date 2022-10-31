@@ -6,7 +6,8 @@ const {
   update,
   _delete,
   getUnseenCommunications,
-  markCommunicationsAsSeen
+  markCommunicationsAsSeen,
+  sendContactUsEmail
 } = require('./communication.controller');
 const { isAuthenticated } = require('../../middlewares/isAuthenticated');
 
@@ -17,5 +18,6 @@ routes.post('/communications/create', isAuthenticated, create);
 routes.delete('/communications/deleteCommunication/:id', isAuthenticated, _delete);
 routes.patch('/communications/update', isAuthenticated, update);
 routes.put('/communications/markCommunicationsAsSeen', isAuthenticated, markCommunicationsAsSeen);
+routes.post('/communications/sendContactUsEmail', isAuthenticated, sendContactUsEmail);
 
 module.exports = routes;

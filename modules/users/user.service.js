@@ -20,7 +20,8 @@ module.exports = {
     update,
     delete: _delete,
     getMentorsByTopicId,
-    getUnverifiedUsers
+    getUnverifiedUsers,
+    getAdminEmails
 };
 
 function authenticate(req) {
@@ -78,6 +79,20 @@ async function getUnverifiedUsers() {
     return new Promise((resolve, reject) => {
         User.find({ 'isActive': true, role: 2, $or: [{ isVerified: false }, { isVerified: { $exists: false } }] })
             .populate('role', 'name')
+            .exec(function (error, doc) {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(doc);
+                }
+            });
+    });
+}
+
+function getAdminEmails() {
+    return new Promise((resolve, reject) => {
+        User.find({ 'isActive': true, role: 1 })
+            .project({ email: 1 })
             .exec(function (error, doc) {
                 if (error) {
                     reject(error);

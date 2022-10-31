@@ -1,6 +1,24 @@
 const db = require('../../_helpers/db');
 const Communication = db.Communication;
+const User = db.User;
+
 const { groupByKey } = require('../../utils/arrayMethods');
+const { getAdminEmails } = require('../users/user.service');
+const { getAll } = require('../users/user.service');
+
+require('dotenv').config()
+var nodemailer = require('nodemailer');
+
+const transport = {
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+        user: process.env.SOME,
+        pass: process.env.PAST
+    }
+}
+var transporter = nodemailer.createTransport(transport);
 
 module.exports = {
     getCommunications,
@@ -10,7 +28,8 @@ module.exports = {
     delete: _delete,
     markCommunicationsAsSeen,
     unseenCommunications,
-    getUnseenCommunications
+    getUnseenCommunications,
+    sendContactUsEmail
 };
 
 function create(communication) {
@@ -145,7 +164,6 @@ function getUnseenCommunications(userId) {
 }
 
 function markCommunicationsAsSeen(createdBy, to) {
-    console.log(createdBy, to);
     return new Promise((resolve, reject) => {
         try {
             Communication.updateMany(
@@ -161,5 +179,36 @@ function markCommunicationsAsSeen(createdBy, to) {
         } catch (error) {
             reject(error);
         }
+    });
+}
+
+
+function sendContactUsEmail(email) {
+    return new Promise(async (resolve, reject) => {
+
+        let adminEmails = [];
+        User.find({ 'isActive': true, role: 1 }, { email: 1, _id: 0 })
+            .exec(function (error, doc) {
+                if (error) {
+                    reject(error);
+                } else {
+                    adminEmails = doc.map(e => e.email);
+                    var mailOptions = {
+                        from: process.env.USERNAME,
+                        to: adminEmails,
+                        subject: process.env.CONTACT_US_EMAIL_SUBJECT,
+                        text: email.message
+                    };
+    
+                    transporter.sendMail(mailOptions, function (error, info) {
+                        if (error) {
+                            console.log('error', error);
+                            reject(error);
+                        } else {
+                            resolve({});
+                        }
+                    });
+                }
+            });
     });
 }

@@ -87,6 +87,13 @@ async function _delete(req, res, next) {
         .catch(error => sendResponse(res, 500, null, (error.message || error || error.error), false, true));
 }
 
+async function sendContactUsEmail(req, res, next) {
+    const to = await getUserId(req);
+    const createdBy = req.body.createdBy;
+    CommunicationService.sendContactUsEmail(req.body)
+        .then(() => res.json({ error: false, success: true, message: "Email sent successfully", data: {} }))
+        .catch(error => sendResponse(res, 500, null, (error.message || error || error.error), false, true));
+}
 
 module.exports = {
     create,
@@ -95,5 +102,6 @@ module.exports = {
     update,
     _delete,
     getUnseenCommunications,
-    markCommunicationsAsSeen
+    markCommunicationsAsSeen,
+    sendContactUsEmail
 };

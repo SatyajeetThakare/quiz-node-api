@@ -69,6 +69,9 @@ const UserSchema = new mongoose.Schema({
     type: Number,
     ref: 'School'
   },
+  profilePicUrl: {
+    type: String
+  },
   docUrl: {
     type: String
   },
