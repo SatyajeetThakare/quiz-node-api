@@ -194,15 +194,16 @@ function sendContactUsEmail(email) {
                 } else {
                     adminEmails = doc.map(e => e.email);
                     var mailOptions = {
-                        from: process.env.USERNAME,
+                        from: email?.email,
                         to: adminEmails,
                         subject: process.env.CONTACT_US_EMAIL_SUBJECT,
-                        text: email.message
+                        text: `${email.message}
+                        From ${email.name.firstName} ${email.name.lastName}
+                        ${email.email}`
                     };
-    
+                    
                     transporter.sendMail(mailOptions, function (error, info) {
                         if (error) {
-                            console.log('error', error);
                             reject(error);
                         } else {
                             resolve({});
