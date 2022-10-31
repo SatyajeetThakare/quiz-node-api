@@ -26,7 +26,19 @@ async function register(req, res, next) {
 }
 
 async function getAll(req, res, next) {
-    UserService.getAll()
+    let _filter = {};
+    if (req.query.filters) {
+        _filter = req.query.filters
+    }
+    
+    UserService.getAll(_filter)
+        .then(doc => res.json({ error: false, success: true, message: "Users fetched successfully", data: doc }))
+        .catch(error => sendResponse(res, 500, null, (error.message || error || error.error), false, true));
+}
+
+async function getAllSeekers(req, res, next) {
+    let _filter = { role: 3 };
+    UserService.getAll(_filter)
         .then(doc => res.json({ error: false, success: true, message: "Users fetched successfully", data: doc }))
         .catch(error => sendResponse(res, 500, null, (error.message || error || error.error), false, true));
 }
@@ -81,6 +93,7 @@ module.exports = {
     authenticate,
     register,
     getAll,
+    getAllSeekers,
     getUserNotifications,
     authMe,
     getById,

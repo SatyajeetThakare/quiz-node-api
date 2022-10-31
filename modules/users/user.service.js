@@ -71,8 +71,8 @@ function authenticate(req) {
     });
 }
 
-async function getAll() {
-    return await User.find();
+async function getAll(filter) {
+    return await User.find(filter);
 }
 
 async function getUnverifiedUsers() {

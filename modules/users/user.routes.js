@@ -16,6 +16,8 @@ const {
     authenticate,
     register,
     update,
+    getAll,
+    getAllSeekers,
     getUserNotifications,
     getById,
     authMe,
@@ -36,6 +38,8 @@ sessions.Session.prototype.authenticate = (req, user, cb) => {
 
 userRoutes.post('/users/authenticate', authenticate);
 userRoutes.get('/users/getUserNotifications', isAuthenticated, getUserNotifications);
+userRoutes.get('/users/getAll', isAuthenticated, getAll);
+userRoutes.get('/users/getAllSeekers', isAuthenticated, getAllSeekers);
 userRoutes.get('/users/authMe', isAuthenticated, authMe);
 userRoutes.get('/users/getById/:id', isAuthenticated, getById);
 userRoutes.post('/users/register', register);
