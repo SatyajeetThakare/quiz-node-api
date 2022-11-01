@@ -9,7 +9,8 @@ const CommunicationSchema = new mongoose.Schema({
     required: [true, 'can\'t be blank']
   },
   topic: {
-    type: Number
+    type: Number,
+    ref: 'Topic'
   },
   to: {
     type: Number

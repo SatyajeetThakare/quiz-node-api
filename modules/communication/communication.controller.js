@@ -69,7 +69,8 @@ async function getById(req, res, next) {
 async function markCommunicationsAsSeen(req, res, next) {
     const to = await getUserId(req);
     const createdBy = req.body.createdBy;
-    CommunicationService.markCommunicationsAsSeen(createdBy, to)
+    const topicId = req.body.topicId
+    CommunicationService.markCommunicationsAsSeen(createdBy, to, topicId)
         .then(() => res.json({ error: false, success: true, message: "Communication updated successfully", data: {} }))
         .catch(error => sendResponse(res, 500, null, (error.message || error || error.error), false, true));
 }

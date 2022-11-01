@@ -138,7 +138,10 @@ function unseenCommunications(userId) {
                 //         { 'isActive': true, 'to': Number(userId) }
                 //     ]
                 // }
-            ).populate('createdBy', 'name').exec(function (error, doc) {
+            )
+            .populate('createdBy', 'name')
+            .populate('topic', 'name')
+            .exec(function (error, doc) {
                 if (error) {
                     reject(error);
                 } else {
@@ -163,11 +166,11 @@ function getUnseenCommunications(userId) {
     });
 }
 
-function markCommunicationsAsSeen(createdBy, to) {
+function markCommunicationsAsSeen(createdBy, to, topicId) {
     return new Promise((resolve, reject) => {
         try {
             Communication.updateMany(
-                { createdBy: Number(createdBy), to: Number(to) },
+                { createdBy: Number(createdBy), to: Number(to), topic: topicId },
                 { isViewed: true }
             ).exec(function (error, doc) {
                 if (error) {
