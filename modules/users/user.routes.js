@@ -2,6 +2,8 @@ const express = require('express');
 const userRoutes = require('express').Router();
 const sessions = require('express-session');
 const app = express();
+const multer = require('multer');
+const upload = multer();
 
 // creating 24 hours from milliseconds
 const oneDay = 1000 * 60 * 60 * 24;
@@ -16,6 +18,7 @@ const {
     authenticate,
     register,
     update,
+    uploadProfilePicture,
     getAll,
     getAllSeekers,
     getUserNotifications,
@@ -44,6 +47,7 @@ userRoutes.get('/users/authMe', isAuthenticated, authMe);
 userRoutes.get('/users/getById/:id', isAuthenticated, getById);
 userRoutes.post('/users/register', register);
 userRoutes.put('/users/update/:id', isAuthenticated, update);
+userRoutes.put('/users/uploadProfilePicture', upload.single(`file`), uploadProfilePicture);
 userRoutes.get('/users/getMentorsByTopicId/:id', isAuthenticated, getMentorsByTopicId);
 userRoutes.get('/users/getUnverifiedUsers', isAuthenticated, getUnverifiedUsers);
 // userRoutes.patch('/users/password', isAuthenticated, changeUserPasswordController);

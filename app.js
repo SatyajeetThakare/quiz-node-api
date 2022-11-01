@@ -5,6 +5,13 @@ var app = express();
 const http = require('http');
 //  CONFIG
 const config = require('./config/default.json');
+var bodyParser = require('body-parser');
+
+app.use(bodyParser.urlencoded({
+  extended: true,
+  limit: '5mb',
+}))
+app.use(bodyParser.json({ limit: '5mb' }))
 
 require('dotenv').config();
 app.use(express.json());

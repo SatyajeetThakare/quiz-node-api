@@ -56,6 +56,7 @@ const UserSchema = new mongoose.Schema({
   },
   topics: [{
     type: mongoose.Schema.Types.Mixed,
+    ref: 'Topic'
   }],
   state: {
     type: Number,
@@ -69,8 +70,8 @@ const UserSchema = new mongoose.Schema({
     type: Number,
     ref: 'School'
   },
-  profilePicUrl: {
-    type: String
+  profilePicDetails: {
+    type: mongoose.Schema.Types.Mixed
   },
   docUrl: {
     type: String

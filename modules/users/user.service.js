@@ -6,6 +6,25 @@ const TokenService = require('../token/token.service');
 const config = require('../../config/config');
 const { sendResponse } = require('../../utils');
 
+require('dotenv').config();
+const AWS = require('aws-sdk');
+const ID = process.env.ID;
+const SECRET = process.env.SECRET;
+// The name of the bucket that you have created
+const BUCKET_NAME = process.env.BUCKET_NAME;
+const s3 = new AWS.S3({
+    accessKeyId: ID,
+    secretAccessKey: SECRET
+});
+
+const params = {
+    Bucket: BUCKET_NAME,
+    CreateBucketConfiguration: {
+        // Set your region here
+        LocationConstraint: "us-east-1"
+    }
+};
+
 const { getUserId } = require('../../middlewares/isAuthenticated');
 const { checkIfQuestionsAreUnanswered } = require('../question-and-answer/question-and-answer.service');
 const { unseenCommunications } = require('../communication/communication.service');
@@ -18,6 +37,7 @@ module.exports = {
     getUserNotifications,
     create,
     update,
+    uploadProfilePicture,
     delete: _delete,
     getMentorsByTopicId,
     getUnverifiedUsers,
@@ -35,7 +55,7 @@ function authenticate(req) {
                 if (user && bcrypt.compareSync(password, user.hash)) {
 
                     const rolesToBeVerified = [2];
-                    const needVerification = rolesToBeVerified.includes(user.role); 
+                    const needVerification = rolesToBeVerified.includes(user.role);
                     if (needVerification && !user.isVerified) {
                         reject('User is not verified yet');
                     }
@@ -129,7 +149,7 @@ function create(userParam) {
         try {
             const rolesDoNotNeedVerification = [1, 3];
             const user = new User(userParam);
-            user.isVerified = rolesDoNotNeedVerification.includes(user.role); 
+            user.isVerified = rolesDoNotNeedVerification.includes(user.role);
             // hash password
             if (userParam.password) {
                 user.hash = bcrypt.hashSync(userParam.password, 10);
@@ -149,6 +169,7 @@ function create(userParam) {
 }
 
 async function update(id, userParam) {
+
     const user = await User.findById(id);
 
     // validate
@@ -168,6 +189,52 @@ async function update(id, userParam) {
     await user.save();
 }
 
+async function uploadProfilePicture(userId, userParam) {
+
+    return new Promise(async (resolve, reject) => {
+        let userUpdateResult = await update(userId, userParam);
+        console.log('userUpdateResult', userUpdateResult);
+        if (userUpdateResult) {
+            let fileUploadResult = await uploadFile(req);
+            User.updateOne(
+                { _id: userId },
+                { profilePicDetails: fileUploadResult }
+            ).exec(function (error, doc) {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(doc);
+                }
+            });
+        }
+    });
+}
+
+const uploadFile = (req) => {
+    return new Promise(async (resolve, reject) => {
+        let file = req.file;
+        let fileName = `${(new Date().toJSON().slice(0, 19))}_` + file.originalname;
+        // Read content from the file
+        const fileContent = file.buffer.toString();
+        // const fileContent = fs.readFileSync(file.originalname, 'utf8');
+
+        // Setting up S3 upload parameters
+        const params = {
+            Bucket: process.env.BUCKET_NAME,
+            Key: fileName, // File name you want to save as in S3
+            Body: file.buffer
+        };
+
+        // Uploading files to the bucket
+        s3.upload(params, function (error, data) {
+            if (error) {
+                reject(error);
+            }
+            resolve(data);
+        });
+    });
+};
+
 async function _delete(id) {
     await User.findByIdAndRemove(id);
 }
@@ -179,6 +246,7 @@ function getMentorsByTopicId(topicId) {
             topics.push(Number(topicId));
 
             User.find({ isActive: true, topics: { $in: topics } })
+                .populate('topics', 'name')
                 .populate('createdBy', 'name')
                 .exec(function (error, doc) {
                     if (error) {

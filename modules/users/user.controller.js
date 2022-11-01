@@ -71,6 +71,15 @@ async function update(req, res, next) {
         .catch(error => sendResponse(res, 500, null, (error.message || error || error.error), false, true));
 }
 
+async function uploadProfilePicture(req, res, next) {
+    console.log('Hi');
+    const userId = await getUserId(req)
+    req.body.updatedBy = userId;
+    UserService.uploadProfilePicture(userId, req)
+        .then((user) => res.json({ error: false, success: true, message: "User updated successfully", data: user }))
+        .catch(error => sendResponse(res, 500, null, (error.message || error || error.error), false, true));
+}
+
 async function _delete(req, res, next) {
     UserService.delete(req.params.id)
         .then((user) => res.json({ error: false, success: true, message: "User deleted successfully", data: user }))
@@ -98,6 +107,7 @@ module.exports = {
     authMe,
     getById,
     update,
+    uploadProfilePicture,
     _delete,
     getMentorsByTopicId,
     getUnverifiedUsers

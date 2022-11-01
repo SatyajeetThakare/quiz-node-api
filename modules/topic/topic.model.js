@@ -14,6 +14,9 @@ const TopicSchema = new mongoose.Schema({
   description: {
     type: String,
   },
+  imageUrl: {
+    type: String,
+  },
   remarks: {
     type: String,
   },
