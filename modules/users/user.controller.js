@@ -18,8 +18,12 @@ async function authenticate(req, res, next) {
 }
 
 async function register(req, res, next) {
+    let responseMessage = 'User created successfully';
+    if (req.body.role == 2) {
+        responseMessage = 'Admin will contact you shortly, please wait as we try to verify you as soon as possible';
+    }
     UserService.create(req.body).then((doc) => {
-        res.json({ error: false, success: true, message: "User created successfully", data: doc });
+        res.json({ error: false, success: true, message: responseMessage, data: doc });
     }).catch(error => {
         sendResponse(res, 500, null, (error.message || error || error.error), false, true);
     });
@@ -72,7 +76,6 @@ async function update(req, res, next) {
 }
 
 async function uploadProfilePicture(req, res, next) {
-    console.log('Hi');
     const userId = await getUserId(req)
     req.body.updatedBy = userId;
     UserService.uploadProfilePicture(userId, req)
