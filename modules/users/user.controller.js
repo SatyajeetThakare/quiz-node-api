@@ -79,7 +79,7 @@ async function uploadProfilePicture(req, res, next) {
     const userId = await getUserId(req)
     req.body.updatedBy = userId;
     UserService.uploadProfilePicture(userId, req)
-        .then((user) => res.json({ error: false, success: true, message: "User updated successfully", data: user }))
+        .then((user) => res.json({ error: false, success: true, message: "Profile picture updated successfully", data: user }))
         .catch(error => sendResponse(res, 500, null, (error.message || error || error.error), false, true));
 }
 

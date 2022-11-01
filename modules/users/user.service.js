@@ -187,15 +187,15 @@ async function update(id, userParam) {
     Object.assign(user, userParam);
 
     await user.save();
+    return user;
 }
 
 async function uploadProfilePicture(userId, userParam) {
 
     return new Promise(async (resolve, reject) => {
         let userUpdateResult = await update(userId, userParam);
-        console.log('userUpdateResult', userUpdateResult);
         if (userUpdateResult) {
-            let fileUploadResult = await uploadFile(req);
+            let fileUploadResult = await uploadFile(userParam);
             User.updateOne(
                 { _id: userId },
                 { profilePicDetails: fileUploadResult }
