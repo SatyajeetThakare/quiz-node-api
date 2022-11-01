@@ -17,6 +17,9 @@ const TopicSchema = new mongoose.Schema({
   imageUrl: {
     type: String,
   },
+  resources: [{
+    type: mongoose.Schema.Types.Mixed
+  }],
   remarks: {
     type: String,
   },
