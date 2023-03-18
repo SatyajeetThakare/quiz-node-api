@@ -14,12 +14,11 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json({ limit: '5mb' }))
 
 require('dotenv').config();
-app.use(express.json());
-var cors = require('cors');
-
 const session = require('express-session');
 
-let whitelist = ['http://localhost:4201', 'https://quizangularapp.web.app'];
+app.use(express.json());
+var cors = require('cors');
+let whitelist = ['http://localhost:4201', 'https://webmentorseeker.web.app'];
 let corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1 || !origin) {
@@ -73,4 +72,4 @@ app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
 });
 
-module.exports = app // for testing
+module.exports = app; // for testing

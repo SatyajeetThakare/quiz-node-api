@@ -5,7 +5,7 @@ allRoutes.get('/', (req, res) => {
     console.log('Welcome!');
     res.json({
       message: constants.WELCOME_MSG
-    })
+    });
 })
 
 const userRoutes = require('../../modules/users/user.routes');

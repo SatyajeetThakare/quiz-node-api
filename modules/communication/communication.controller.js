@@ -96,6 +96,12 @@ async function sendContactUsEmail(req, res, next) {
         .catch(error => sendResponse(res, 500, null, (error.message || error || error.error), false, true));
 }
 
+async function sendSubscriptionEmail(req, res, next) {
+    CommunicationService.sendSubscriptionEmail(req.body)
+        .then(() => res.json({ error: false, success: true, message: "Email sent successfully", data: {} }))
+        .catch(error => sendResponse(res, 500, null, (error.message || error || error.error), false, true));
+}
+
 module.exports = {
     create,
     getCommunications,
@@ -104,5 +110,6 @@ module.exports = {
     _delete,
     getUnseenCommunications,
     markCommunicationsAsSeen,
-    sendContactUsEmail
+    sendContactUsEmail,
+    sendSubscriptionEmail
 };

@@ -20,6 +20,17 @@ const transport = {
 }
 var transporter = nodemailer.createTransport(transport);
 
+const transportGiveTheNeed = {
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+        user: process.env.GIVETHENEED,
+        pass: process.env.PAST
+    }
+}
+var transporterGiveTheNeed = nodemailer.createTransport(transportGiveTheNeed);
+
 module.exports = {
     getCommunications,
     getById,
@@ -29,7 +40,8 @@ module.exports = {
     markCommunicationsAsSeen,
     unseenCommunications,
     getUnseenCommunications,
-    sendContactUsEmail
+    sendContactUsEmail,
+    sendSubscriptionEmail
 };
 
 function create(communication) {
@@ -139,15 +151,15 @@ function unseenCommunications(userId) {
                 //     ]
                 // }
             )
-            .populate('createdBy', 'name')
-            .populate('topic', 'name')
-            .exec(function (error, doc) {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(doc);
-                }
-            });
+                .populate('createdBy', 'name')
+                .populate('topic', 'name')
+                .exec(function (error, doc) {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(doc);
+                    }
+                });
         } catch (error) {
             reject(error);
         }
@@ -185,7 +197,6 @@ function markCommunicationsAsSeen(createdBy, to, topicId) {
     });
 }
 
-
 function sendContactUsEmail(email) {
     return new Promise(async (resolve, reject) => {
 
@@ -204,7 +215,7 @@ function sendContactUsEmail(email) {
                         From ${email.name.firstName} ${email.name.lastName}
                         ${email.email}`
                     };
-                    
+
                     transporter.sendMail(mailOptions, function (error, info) {
                         if (error) {
                             reject(error);
@@ -214,5 +225,27 @@ function sendContactUsEmail(email) {
                     });
                 }
             });
+    });
+}
+
+function sendSubscriptionEmail(email) {
+    return new Promise(async (resolve, reject) => {
+
+        var mailOptions = {
+            from: email?.email,
+            to: 'satyajeetthakre@gmail.com',
+            subject: 'Email Subscribe',
+            html: `<p>Hello</p>
+            <p>You have received a new subscription email. Have a nice day!</p>
+            <p>Cheers,<br>GiveTheNeed</p>`
+        };
+
+        transporterGiveTheNeed.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                reject(error);
+            } else {
+                resolve({});
+            }
+        });
     });
 }
